@@ -1,3 +1,4 @@
+import { workSpaceAction } from "@/actions/workSpaceAction";
 import {
   Select,
   SelectContent,
@@ -5,13 +6,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { getAllTask } from "@/service/cardService";
+import { saveWorkSpace } from "@/service/workspaceService";
 import { Clock, Ellipsis } from "lucide-react";
 import React from "react";
 
-export default function CardComponent() {
+export default async function CardComponent(id) {
+  const taskList = await getAllTask(id);
+  
+  console.log("task List", taskList);
+  
   
   return (
-    <div className="border border-gray-300 rounded-xl mt-8">
+    <div className="border border-gray-300 rounded-xl mt-8 ">
       <div className="p-5">
         <div className="flex justify-between">
           <h2 className="text-xl font-bold capitalize">HRD Design</h2>

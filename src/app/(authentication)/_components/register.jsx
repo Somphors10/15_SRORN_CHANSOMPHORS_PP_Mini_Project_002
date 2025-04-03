@@ -1,15 +1,44 @@
 "use client";
-import { signInAction } from "@/actions/signInAction";
+import { signUpAction } from "@/actions/signUpAction";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { KeyRound, Mail, UserRound } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import { useActionState } from "react";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function RegisterComponent() {
+  const [state, formAction] = useActionState(signUpAction, {
+    success: false,
+    message: null,
+  });
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (state.success && state.redirectTo) {
+      router.push(state.redirectTo);
+    }
+  }, [state, router]);
+
   return (
-    <form action={signInAction} className="space-y-6">
+    <form action={formAction} className="space-y-6">
+      {/* Success message */}
+      {state.success && (
+        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+          {state.message}
+        </div>
+      )}
+
+      {/* Error message */}
+      {!state.success && state.message && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+          {state.message}
+        </div>
+      )}
+
       {/* username */}
       <div>
         <Label
@@ -18,12 +47,11 @@ export default function RegisterComponent() {
         >
           <UserRound size={20} /> Username
         </Label>
-
         <Input
           name="username"
           type="text"
           placeholder="Please type your username"
-          className={` bg-ghost-white py-2.5 px-4 rounded-lg w-full text-light-steel-blue/90`}
+          className={`bg-ghost-white py-2.5 px-4 rounded-lg w-full text-light-steel-blue/90`}
         />
       </div>
 
@@ -31,11 +59,10 @@ export default function RegisterComponent() {
       <div>
         <Label
           htmlFor="email"
-          className="text-light-steel-blue flex gap-2 items-start mb-2  text-base"
+          className="text-light-steel-blue flex gap-2 items-start mb-2 text-base"
         >
           <Mail size={20} /> Email
         </Label>
-
         <Input
           name="email"
           type="email"
@@ -52,7 +79,6 @@ export default function RegisterComponent() {
         >
           <KeyRound size={20} /> Password
         </Label>
-
         <Input
           name="password"
           type="password"
@@ -61,12 +87,10 @@ export default function RegisterComponent() {
         />
       </div>
 
-      {/* sign in button */}
       <Button className="text-base cursor-pointer bg-persian-green text-white py-2.5 rounded-lg w-full font-bold">
-        Sign Up{" "}
+        Sign Up
       </Button>
 
-      {/* underline */}
       <div>
         <div className="border-b border-b-light-steel-blue"></div>
         <div className="text-right mt-2 font-normal">
@@ -80,8 +104,7 @@ export default function RegisterComponent() {
         </div>
       </div>
 
-      {/* sign in with google */}
-      <div className=" bg-ghost-white rounded-lg text-center">
+      <div className="bg-ghost-white rounded-lg text-center">
         <Button className="flex gap-2 items-start justify-center w-full bg-ghost-white text-charcoal shadow-none hover:bg-ghost-white/50">
           <img src="/Google Icon.svg" alt="google icon" /> Sign in with google
         </Button>

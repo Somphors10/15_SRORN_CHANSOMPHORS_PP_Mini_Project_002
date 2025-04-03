@@ -1,5 +1,6 @@
 // src/services/signInService.js
-export const signInService = async (user) => {
+export const signInService = async (credentials) => {
+  try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_AUTH_BASE_URL}/auth/login`,
       {
@@ -7,11 +8,21 @@ export const signInService = async (user) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(user),
+        body: JSON.stringify({
+          email: credentials.email,
+          password: credentials.password,
+        }),
       }
     );
-  
-    const signedInUser = await response.json();
-    return signedInUser ;
-  };
-  
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Invalid credentials");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("SignIn error:", error);
+    throw error; 
+  }
+};

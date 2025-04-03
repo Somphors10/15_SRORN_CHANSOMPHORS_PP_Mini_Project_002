@@ -1,40 +1,44 @@
+
+import { getUserDatial } from "@/service/userDetail";
 import { ChevronRight } from "lucide-react";
 import { Bell } from "lucide-react";
 
-
-export default function TopNavbarComponent() {
-
+export default async function TopNavbarComponent() {
+    const response = await getUserDatial();
+    const currentUser = response?.payload;
 
     return (
-        <div className="flex justify-between items-center ">
-            <div className="flex gap-6">
+        <div className="flex justify-between items-center">
+            {/* Workspace Navigation */}
+            <div className="flex gap-6 items-center">
                 <div>Workspace</div>
-                <ChevronRight />
+                <ChevronRight size={16} />
                 <div>HRD Design</div>
             </div>
 
-            <div className="flex items-center">
-                {/* notification bell */}
-                <div className="relative w-12 h-12 bg-white p-2.5 rounded-full ">
-                    <Bell className="w-7 h-7 text-primary-text" />
-                    {/* red dot */}
-                    <div className="bg-red-600 w-2.5 h-2.5 rounded-full absolute top-2 right-3"></div>
+            {/* User Controls */}
+            <div className="flex items-center gap-4">
+                {/* Notification Bell */}
+                <div className=" w-10 h-10 bg-white p-2 rounded-full flex ml-4">
+                    <Bell className="w-6 h-6 text-primary-text" />
                 </div>
 
-                {/* profile image */}
-                <div className="h-16 rounded-xl  bg-white py-2.5 px-6 flex gap-3 items-start ">
+                {/* User Profile */}
+                <div className="flex items-center gap-3 bg-white rounded-xl  py-2">
                     <img
-                        src="/p1.jpg"
-                        alt="profile image"
-                        width={45}
-                        height={45}
-                        className="rounded-full"
+                        src={currentUser.profile}
+                        alt="User profile"
+                        width={40}
+                        height={40}
+                        className="rounded-full border-2 border-gray-100"
                     />
-
-                    {/* username and email */}
                     <div>
-                        <p className="capitalize text-base">dark moon</p>
-                        <p className="text-gray-400 text-sm">darkmoon@gmail.com</p>
+                        <p className="font-medium  capitalize">
+                            {currentUser.username}
+                        </p>
+                        <p className="text-gray-500 ">
+                            {currentUser.email}
+                        </p>
                     </div>
                 </div>
             </div>
