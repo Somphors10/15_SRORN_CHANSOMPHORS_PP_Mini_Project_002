@@ -2,34 +2,35 @@
 import { useEffect, useState } from 'react';
 import { Ellipsis, SquarePlus } from 'lucide-react';
 import WorkSpacePopUpComponent from './WorkSpacePopUpComponent';
+import { useRouter } from 'next/navigation'; // Changed from 'next/router'
 
 export default function WorkSpace({ initialWorkspaces }) {
-  const [workspaces, setWorkspaces] = useState();
+  const [workspaces, setWorkspaces] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
+  const router = useRouter();
+  const [selectedWorkspace, setSelectedWorkspace] = useState(null);
 
-
-  const [selectedWorkspace, setSelectedWorkspace] = useState(workspaces?.id);
+  const handleSelectWorkspace = (id) => {
+    setSelectedWorkspace(id);
+    console.log("Selected workspace ID:", id);
+    if (id) {
+      router.push(`/dashboard/${selectedWorkspace}`);
+    }
+  };
 
   const handleWorkspaceCreated = (newWorkspace) => {
     setWorkspaces(prev => [...prev, newWorkspace]);
     setShowPopup(false);
   };
 
-  const handleSelectWorkspace = (id) => {
-    setSelectedWorkspace(
-      initialWorkspaces?.payload?.map((item) => item.workspaceId === id)
-      
-    );
-
-
-    setSelectedWorkspace(id);
-    console.log("Selected workspace ID:", selectedWorkspace);
-  };
-
   useEffect(() => {
-    setWorkspaces(initialWorkspaces?.payload || [])
-  }, [initialWorkspaces?.payload])
+    setWorkspaces(initialWorkspaces?.payload || []);
 
+    // Set initial selected workspace if needed
+    if (initialWorkspaces?.payload?.length > 0 && !selectedWorkspace) {
+      setSelectedWorkspace(initialWorkspaces.payload[0].workspaceId);
+    }
+  }, [initialWorkspaces?.payload]);
 
   return (
     <div className='w-full'>

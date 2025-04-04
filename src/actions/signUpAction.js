@@ -30,7 +30,7 @@ export const signUpAction = async (prevState, formData) => {
             success: true, 
             message: "Registration successful!",
             redirectTo: "/login",
-            user: data.user // if your API returns user data
+            user: data.user 
         };
     } catch (error) {
         console.error("Registration error:", error);
